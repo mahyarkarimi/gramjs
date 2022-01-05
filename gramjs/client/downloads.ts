@@ -12,6 +12,7 @@ export interface progressCallback {
     (
         /** float between 0 and 1 */
         progress: number,
+        chunk: any,
         /** other args to be passed if needed */
         ...args: any[]
     ): void;
@@ -104,7 +105,7 @@ export async function downloadFile(
 
     let progress = 0;
     if (progressCallback) {
-        progressCallback(progress);
+        progressCallback(progress, Buffer.alloc(0));
     }
 
     // Preload sender
@@ -152,7 +153,7 @@ export async function downloadFile(
                             }
 
                             progress += 1 / partsCount;
-                            progressCallback(progress);
+                            progressCallback(progress, result);
                         }
 
                         if (!end && result.bytes.length < limit) {
